@@ -58,3 +58,7 @@ export const CoursesList = styled(FlatList as new () => FlatList<Course>)`
   background-color: #F0EDF5;
   padding: 15px;
 `;
+
+export const EmptyCoursesText = styled.Text`
+  align-self: center;
+`;

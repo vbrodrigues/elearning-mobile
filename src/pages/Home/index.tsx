@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
 
 import logoImg from '../../assets/Logotipo.png';
-import physicsImg from '../../assets/Física.png';
-import mathImg from '../../assets/Math.png';
-import chemistryImg from '../../assets/Quimica.png';
 
 import Card from '../../components/Card';
 
@@ -21,6 +19,7 @@ import {
   ContentHeaderText,
   ContentHeaderTitle,
   CoursesList,
+  EmptyCoursesText,
 } from './styles';
 
 interface Lesson {
@@ -40,6 +39,8 @@ export interface Course {
 const Home: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
 
+  const { navigate } = useNavigation();
+
   useEffect(() => {
     async function loadCourses() {
       const response = await api.get('/courses');
@@ -49,6 +50,12 @@ const Home: React.FC = () => {
 
     loadCourses();
   }, []);
+
+  const handleNavigateToCoursePage = useCallback((course) => {
+    navigate('CoursePage', {
+      course,
+    });
+  }, [navigate]);
 
   return (
     <Container>
@@ -68,14 +75,16 @@ const Home: React.FC = () => {
           </ContentHeaderText>
         </ContentHeader>
 
-        <CoursesList
-          data={courses}
-          keyExtractor={(course) => course.id}
-          numColumns={2}
-          renderItem={({ item: course }) => (
-            <Card image={course.image} title={course.name} description={course.lessons.length !== 1 ? `${course.lessons.length} aulas` : `${course.lessons.length} aula`} />
-          )}
-        />
+        {courses.length === 0 ? <EmptyCoursesText>Nenhum curso disponível</EmptyCoursesText> : (
+          <CoursesList
+            data={courses}
+            keyExtractor={(course) => course.id}
+            numColumns={2}
+            renderItem={({ item: course }) => (
+              <Card onPress={() => handleNavigateToCoursePage(course)} image={course.image} title={course.name} description={course.lessons.length !== 1 ? `${course.lessons.length} aulas` : `${course.lessons.length} aula`} />
+            )}
+          />
+        )}
 
       </Content>
     </Container>

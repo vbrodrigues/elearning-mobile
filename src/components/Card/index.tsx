@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageSourcePropType, ViewProps } from 'react-native';
+import { ImageSourcePropType, ButtonProps } from 'react-native';
 
 import {
   Card,
@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from './styles';
 
-interface CardProps extends ViewProps {
+interface CardProps extends ButtonProps {
   image: string;
   title: string;
   description: string;
